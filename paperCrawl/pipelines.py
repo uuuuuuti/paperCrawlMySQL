@@ -13,11 +13,108 @@
 
 from pymongo import MongoClient
 from paperCrawl.settings import MONGO_URI
-from paperCrawl.items import PaperItem, ProceedingItem, NewspaperItem, DocmasItem, UnitItem
+from paperCrawl.items import PaperItem, ProceedingItem, NewspaperItem, DocmasItem, UnitItem, ConferenceItem, AuthorItem, JournalItem
+from sqlalchemy.orm import sessionmaker
+from paperCrawl.models import Paper, Author, Unit, Journal, db_connect, create_table
 import codecs, json
 #from scrapy.exceptions import DropItem
 #import redis
 
+'''
+存Mysql
+'''
+class MysqlPipeline(object):
+    def __init__(self):
+        engine = db_connect()
+        create_table(engine)
+        self.Session = sessionmaker(bind=engine)
+
+    # def process_item(self, item, spider):
+    #     session = self.Session()
+    #     #hn = Hn(**item)
+    #     #session.add(hn)
+    #     session.commit()
+    #     return item
+    def _process_paper(self, item):
+        session = self.Session()
+        paper = Paper(**item)
+        data = session.query(Paper).filter_by(id= paper.id).first()
+        if not data:
+            session.add(paper)
+            session.commit()
+
+    def _process_author(self, item):
+        session = self.Session()
+        author = Author(**item)
+        data = session.query(Author).filter_by(id=author.id).first()
+        if not data:
+            session.add(author)
+            session.commit()
+
+    def _process_unit(self, item):
+        session = self.Session()
+        unit = Unit(**item)
+        data = session.query(Unit).filter_by(id=unit.id).first()
+        if not data:
+            session.add(unit)
+            session.commit()
+
+    def _process_journal(self, item):
+        session = self.Session()
+        journal = Journal(**item)
+        data = session.query(Journal).filter_by(id=journal.id).first()
+        if not data:
+            session.add(journal)
+            session.commit()
+
+    # def _process_proceeding(self, item):
+    #     session = self.Session()
+    #     proceeding = Proceeding(**item)
+    #     data = session.query(Proceeding).filter_by(id=proceeding.id).first()
+    #     if not data:
+    #         session.add(proceeding)
+    #         session.commit()
+    #
+    # def _process_conference(self, item):
+    #     session = self.Session()
+    #     conference = Conference(**item)
+    #     data = session.query(Conference).filter_by(id=conference.id).first()
+    #     if not data:
+    #         session.add(conference)
+    #         session.commit()
+    #
+    # def _process_docmas(self, item):
+    #     session = self.Session()
+    #     docmas = Docmas(**item)
+    #     data = session.query(Docmas).filter_by(id=docmas.id).first()
+    #     if not data:
+    #         session.add(docmas)
+    #         session.commit()
+
+    def process_item(self, item, spider):
+        """
+        处理item
+        """
+        if isinstance(item, PaperItem):
+            self._process_paper(item)
+        # elif isinstance(item, ProceedingItem):
+        #     self._process_proceeding(item)
+        # elif isinstance(item, ConferenceItem):
+        #     self._process_conference(item)
+        # elif isinstance(item, DocmasItem):
+        #     self._process_docmas(item)
+        elif isinstance(item, UnitItem):
+            self._process_unit(item)
+        elif isinstance(item, AuthorItem):
+            self._process_author(item)
+        elif isinstance(item, JournalItem):
+            self._process_journal(item)
+        return item
+
+
+'''
+存MongoDB
+'''
 class PapercrawlPipeline(object):
     def __init__(self, mongo_uri, mongo_db):
         #self.file = codecs.open('unit.json', 'w', encoding='utf-8')
@@ -122,7 +219,7 @@ class PapercrawlPipeline(object):
             self._process_paper(item)
         elif isinstance(item, ProceedingItem):
             self._process_proceeding(item)
-        elif  isinstance(item, NewspaperItem):
+        elif isinstance(item, NewspaperItem):
             self._process_newspaper(item)
         elif isinstance(item, DocmasItem):
             self._process_docmas(item)

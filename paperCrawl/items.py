@@ -36,22 +36,43 @@ class PaperItem(scrapy.Item):
         download_num 被下载次数
 
         """
+    '''
+    id = Column(String, primary_key=True)
+    title = Column(String)
+    abstract = Column(String)
+    journal_id = Column(String)
+    pub_date = Column(String)
+    author_ids = Column(String)
+    doi = Column(String)
+    db_code = Column(String)
+    db_name = Column(String)
+    categorys = Column(String)
+    org_names = Column(String)
+
+    keywords = Column(String)
+    funds = Column(String)
+    quote_num = Column(Integer)
+    quote2_num = Column(Integer)
+    download_num = Column(Integer)
+    url = Column(String)
+    '''
     id = scrapy.Field()
     title = scrapy.Field()
-    authors = scrapy.Field()
-    journal = scrapy.Field()
-    journal_eng = scrapy.Field()
-    issn = scrapy.Field()
+    summary = scrapy.Field()
+    journal_id = scrapy.Field()
+    journal_name = scrapy.Field()
+    pub_date = scrapy.Field()
+    author_ids = scrapy.Field()
+    author_names = scrapy.Field()
     doi = scrapy.Field()
     db_code = scrapy.Field()
     db_name = scrapy.Field()
-    pub_date = scrapy.Field()
-    category = scrapy.Field()
+    categorys = scrapy.Field()
     url = scrapy.Field()
-    organizations = scrapy.Field()
+    org_names = scrapy.Field()
+    org_ids = scrapy.Field()
     keywords = scrapy.Field()
-    abstract = scrapy.Field()
-    fund = scrapy.Field()
+    funds = scrapy.Field()
     quote_num = scrapy.Field()
     quote2_num = scrapy.Field()
     download_num = scrapy.Field()
@@ -180,7 +201,9 @@ class PatentItem(scrapy.Item):
 
 class UnitItem(scrapy.Item):
     id = scrapy.Field()
-    unit_name = scrapy.Field()
+    name = scrapy.Field()
+    location = scrapy.Field()
+    url = scrapy.Field()
 
 '''
 refer_list 参考文献列表
@@ -194,3 +217,28 @@ class ReferItem(scrapy.Item):
     authors = scrapy.Field()
     quote_list = scrapy.Field()
     refer_list = scrapy.Field()
+
+class ConferenceItem(scrapy.Item):
+    id = scrapy.Field()
+
+class AuthorItem(scrapy.Item):
+    id = scrapy.Field()
+    name = scrapy.Field()
+    unit_id = scrapy.Field()
+    unit_name = scrapy.Field()
+    domains = scrapy.Field()
+    url = scrapy.Field()
+    p_id = scrapy.Field()
+
+class JournalItem(scrapy.Item):
+    id = scrapy.Field()
+    name = scrapy.Field()
+    en_name = scrapy.Field()
+    issn = scrapy.Field()
+    db_code = scrapy.Field()
+    levels = scrapy.Field()
+    impact_factor = scrapy.Field()
+    search_index = scrapy.Field()
+    papers_num = scrapy.Field()
+    quote_num = scrapy.Field()
+    pub_cycle = scrapy.Field()

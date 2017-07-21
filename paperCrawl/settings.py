@@ -35,7 +35,7 @@ DOWNLOAD_DELAY = 0.25
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
-
+COOKIES_ENABLED=False
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
 
@@ -81,6 +81,10 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(os.path.curdir))
 # mongodb配置
 MONGO_URI = 'mongodb://localhost:27017'
 
+
+#Mysql配置
+MYSQL_URI = 'mysql+pymysql://root:asdasd@localhost:3306/zhiWang?charset=utf8'
+
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
@@ -90,7 +94,7 @@ MONGO_URI = 'mongodb://localhost:27017'
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'paperCrawl.pipelines.PapercrawlPipeline': 300,
+    'paperCrawl.pipelines.MysqlPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
